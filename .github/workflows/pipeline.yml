@@ -8,8 +8,8 @@ on:
 
 #Variável de ambiente disponível para todo workflow
 env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true #Forçar a usar no node24 antes de ser tornar o padrão devido a descontinuidade do node.js 20
+  #ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true #caso eu queira forçar a não executar o node.js 24 por padrão no lugar do 20 
   NODE_VERSION: '18'
 
 #Jobs são um conjunto de steps executados dentro de uma mesmo ambiente
