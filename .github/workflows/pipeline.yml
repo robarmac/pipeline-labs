@@ -1,32 +1,44 @@
-name: Jobs Paralelo vs Sequencial
-on: [push]
+name: "Estrutura de Diretórios e Arquivos" #Nome visível do workflow na interface do github actions
 
+#Bloco On indica quando o workflow deve ser acionado
+on:
+  push:
+    branches: [ main ] #realiza um push na branch main
+  workflow_dispatch: #indica que execução manual
+
+#Variável de ambiente disponível para todo workflow
+env:
+  NODE_VERSION: '18'
+
+#Jobs são um conjunto de steps executados dentro de uma mesmo ambiente
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Lint
-        run: echo "Lint OK"
+  demostrar-etrutura:
+    name: "Demonstrar Estrutura Básica" #nome de quanto a pipeline estiver executando, pode ser que que definir
+    runs-on: ubuntu-latest #onde os steps serão executados
 
-  testes:
-    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Testes
-        run: echo "Testes OK"
+      - name: Checkout do código
+        uses: actions/checkout@v4 #todo workflow que precisa de código de repositório devemos usar a action checkout que faz o download do repositário para dentro do runner
 
-  build:
-    needs: [lint, testes]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build
-        run: echo "Build executado"
+      - name: Mostrar estrutura .github/workflows
+        run: |
+          echo "=== ESTRUTURA DO DIRETÓRIO .github/workflows ==="
+          ls -la .github/workflows/
+          echo ""
+          echo "Total de workflows: $(ls -1 .github/workflows/*.y*ml 2>/dev/null | wc -l)"
 
-  publicar:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Publicar (simulado)
-        run: echo "Publicação concluída"
+#Imprime no log os três elementos essenciais (name, on e jobs) para qualquer workflow funcionar, sem esse bloco o github actions não reconhece esse arquivo como válido
+      - name: Elementos obrigatórios do workflow
+        run: |
+          echo "=== ELEMENTOS OBRIGATÓRIOS ==="
+          echo "1. name: Nome do workflow"
+          echo "2. on: Eventos de trigger (push, workflow_dispatch)"
+          echo "3. jobs: Tarefas a executar"
+
+      - name: Variáveis e contextos
+        run: |
+          echo "=== VARIÁVEIS E CONTEXTOS ==="
+          echo "Variável env: ${{ env.NODE_VERSION }}" 
+          echo "Repositório: ${{ github.repository }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Actor: ${{ github.actor }}"
