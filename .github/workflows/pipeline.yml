@@ -13,7 +13,7 @@ jobs:
     #todo workflow que precisa de código de repositório devemos usar a action checkout que faz o download do repositário para dentro do runner
       uses: actions/checkout@v4
 
-    - namme: Informações do Schedule #nome do step
+    - name: Informações do Schedule #nome do step
       run: |
         echo "Workflow disparado por SCHEDULE"
         echo "Data atual: $(date)"
