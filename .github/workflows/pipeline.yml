@@ -1,29 +1,32 @@
+name: Push Trigger Workflow
+
+### Exectuta apenas em push
 on:
-  schedule:
-    # Executa às 21:55 horário de Brasília (UTC)
-    - cron: '55 00 * * *'
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'src/**'
+      - 'README.md'
 
 jobs:
-  echeduled-jobs:
+  push-job:
     runs-on: ubuntu-latest
 
     steps:
-    - name: checkout código
-    #todo workflow que precisa de código de repositório devemos usar a action checkout que faz o download do repositário para dentro do runner
-      uses: actions/checkout@v4
+      - name: Checkout código
+        uses: actions/checkout@v4
 
-    - name: Informações do Schedule #nome do step
-      run: |
-        echo "Workflow disparado por SCHEDULE"
-        echo "Data atual: $(date)"
-        echo "Hora UTC: $(date -u)"
-        echo "Timezone: $(date +%Z)"
+      - name: Informações do Push
+        run: |
+          echo "Workflow disparado por PUSH"
+          echo "Commit: ${{ github.sha }}"
+          echo "Autor: ${{ github.actor }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Repositório: ${{ github.repository }}"
 
-    - name: Relatório diário automatizado #Simulação de um relatório automatizado
-      run: |
-        echo "RELATÓRIO DIÁRIO AUTOMATIZADO"
-        echo "================================"
-        echo "Total de commits: $(git rev-list --all --count)"
-        echo "Contribuidores únicos: $(git shortlog -sn | wc -l)"
-        echo "Último commit: $(git log -1 --pretty=format:'%h - %s (%an, %ar)')"
+      - name: Listar arquivos modificados
+        run: |
+          echo "Arquivos no repositório:"
+          ls -la
