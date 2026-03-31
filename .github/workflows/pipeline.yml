@@ -1,46 +1,29 @@
-name: "Estrutura de Diretórios e Arquivos" #Nome visível do workflow na interface do github actions
-
-#Bloco On indica quando o workflow deve ser acionado
 on:
-  push:
-    branches: [ main ] #realiza um push na branch main
-  workflow_dispatch: #indica que execução manual
+  schedule:
+    # Executa às 21:55 horário de Brasília (UTC)
+    - cron: '55 00 * * *'
+  workflow_dispatch:
 
-#Variável de ambiente disponível para todo workflow
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true #Forçar a usar no node24 antes de ser tornar o padrão devido a descontinuidade do node.js 20
-  #ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true #caso eu queira forçar a não executar o node.js 24 por padrão no lugar do 20 
-  NODE_VERSION: '18'
-
-#Jobs são um conjunto de steps executados dentro de uma mesmo ambiente
 jobs:
-  demostrar-etrutura:
-    name: "Demonstrar Estrutura Básica" #nome de quanto a pipeline estiver executando, pode ser que que definir
-    runs-on: ubuntu-latest #onde os steps serão executados
+  echeduled-jobs:
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4 #todo workflow que precisa de código de repositório devemos usar a action checkout que faz o download do repositário para dentro do runner
+    - name: checkout código
+    #todo workflow que precisa de código de repositório devemos usar a action checkout que faz o download do repositário para dentro do runner
+      uses: actions/checkout@v4
 
-      - name: Mostrar estrutura .github/workflows
-        run: |
-          echo "=== ESTRUTURA DO DIRETÓRIO .github/workflows ==="
-          ls -la .github/workflows/
-          echo ""
-          echo "Total de workflows: $(ls -1 .github/workflows/*.y*ml 2>/dev/null | wc -l)"
+    - namme: Informações do Schedule #nome do step
+      run: |
+        echo "Workflow disparado por SCHEDULE"
+        echo "Data atual: $(date)"
+        echo "Hora UTC: $(date -u)"
+        echo "Timezone: $(date +%Z)"
 
-#Imprime no log os três elementos essenciais (name, on e jobs) para qualquer workflow funcionar, sem esse bloco o github actions não reconhece esse arquivo como válido
-      - name: Elementos obrigatórios do workflow
-        run: |
-          echo "=== ELEMENTOS OBRIGATÓRIOS ==="
-          echo "1. name: Nome do workflow"
-          echo "2. on: Eventos de trigger (push, workflow_dispatch)"
-          echo "3. jobs: Tarefas a executar"
-
-      - name: Variáveis e contextos
-        run: |
-          echo "=== VARIÁVEIS E CONTEXTOS ==="
-          echo "Variável env: ${{ env.NODE_VERSION }}" 
-          echo "Repositório: ${{ github.repository }}"
-          echo "Branch: ${{ github.ref_name }}"
-          echo "Actor: ${{ github.actor }}"
+    - name: Relatório diário automatizado #Simulação de um relatório automatizado
+      run: |
+        echo "RELATÓRIO DIÁRIO AUTOMATIZADO"
+        echo "================================"
+        echo "Total de commits: $(git rev-list --all --count)"
+        echo "Contribuidores únicos: $(git shortlog -sn | wc -l)"
+        echo "Último commit: $(git log -1 --pretty=format:'%h - %s (%an, %ar)')"
